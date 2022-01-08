@@ -2,7 +2,7 @@ module.exports = {
     aliases: ["eat"],
     run: async (msg, args) => {
         const userID = msg.author.id
-        const comidaDiccionario = ["salchipapa", "hamburguesa :hamburger:", "pizza :pizza:", "loli :flushed:"]
+        const comidaDiccionario = ["salchipapa", "hamburguesa :hamburger:", "pizza :pizza:", "loli :flushed:", "lechepapu :milk:"]
         const userSnap = await db.collection("usuarios").doc(userID).get()
         const nivel = userSnap.data().nivel
         const salud = userSnap.data().salud
