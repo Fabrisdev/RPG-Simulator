@@ -29,7 +29,8 @@ module.exports = async (msg) => {
             salud: 40,
             dinero: 0,
             nivel: 0,
-            xp: 0
+            xp: 0,
+            items: []
         })
         return
     }
