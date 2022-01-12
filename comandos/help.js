@@ -18,7 +18,7 @@ module.exports = {
             if(itemSnap.tipo == "Armas"){
                 embedAyuda.setTitle(itemSnap.nombre)
                 embedAyuda.setDescription(`
-                    **ID**: ${args[0]}
+                    **ID**: ${args[1]}
                     **Tipo**: ${itemSnap.tipo}
                     **Emoji**: ${itemSnap.emoji}
                     **Uso**: Te entrega ${itemSnap.ataque} AT
@@ -27,7 +27,7 @@ module.exports = {
             if(itemSnap.tipo == "Armaduras"){
                 embedAyuda.setTitle(itemSnap.nombre)
                 embedAyuda.setDescription(`
-                    **ID**: ${args[0]}
+                    **ID**: ${args[1]}
                     **Tipo**: ${itemSnap.tipo}
                     **Emoji**: ${itemSnap.emoji}
                     **Uso**: Te entrega ${itemSnap.defensa} DEF
@@ -37,7 +37,7 @@ module.exports = {
             if(itemSnap.tipo == "Consumibles"){
                 embedAyuda.setTitle(itemSnap.nombre)
                 embedAyuda.setDescription(`
-                    **ID**: ${args[0]}
+                    **ID**: ${args[1]}
                     **Tipo**: ${itemSnap.tipo}
                     **Emoji**: ${itemSnap.emoji}
                     **Uso**: Regenera ${itemSnap.curacion} HP
