@@ -16,12 +16,12 @@ module.exports = {
                 .setLabel('ARMADURA')
                 .setStyle('PRIMARY'),
             new MessageButton()
-                .setCustomId("comida")
-                .setLabel('COMIDA')
+                .setCustomId("consumibles")
+                .setLabel('CONSUMIBLES')
                 .setStyle('PRIMARY'),
         )
 
-        let messageSent = msg.channel.send({ embeds: [await embedsTienda.armas()], components: [row]})
+        let messageSent = await msg.channel.send({ embeds: [await embedsTienda.armas()], components: [row]})
 
         const filter = (interaction) => {
             if(interaction.user.id === msg.author.id) return true
@@ -33,21 +33,33 @@ module.exports = {
         collector.on("collect", async (ButtonInteraction) => {
             ButtonInteraction.deferUpdate()
             const buttonID = ButtonInteraction.customId
-            /*if(buttonID === "comprar"){
+            if(buttonID === "armas"){
                 row.components[0].setDisabled(true)
                 row.components[1].setDisabled(false)
+                row.components[2].setDisabled(false)
                 row.components[0].setStyle("SUCCESS")
                 row.components[1].setStyle("PRIMARY")
-                return messageSent.edit({ content: "Aquí puede ver los objetos a la venta", embeds: [embedsTienda.pagina1], components: [row] })
+                row.components[2].setStyle("PRIMARY")
+                return messageSent.edit({ embeds: [await embedsTienda.armas()], components: [row] })
             }
-            if(buttonID === "vender"){
+            if(buttonID === "armadura"){
                 row.components[0].setDisabled(false)
                 row.components[1].setDisabled(true)
+                row.components[2].setDisabled(false)
                 row.components[0].setStyle("PRIMARY")
                 row.components[1].setStyle("SUCCESS")
-                return messageSent.edit({ content: "Con qué quieres vender un objeto tuyo, ¿Eh?", embeds: [embedsTienda.paginavender1], components: [row] })
+                row.components[2].setStyle("PRIMARY")
+                return messageSent.edit({ embeds: [await embedsTienda.armaduras()], components: [row] })
             }
-            */
+            if(buttonID === "consumibles"){
+                row.components[0].setDisabled(false)
+                row.components[1].setDisabled(false)
+                row.components[2].setDisabled(true)
+                row.components[0].setStyle("PRIMARY")
+                row.components[1].setStyle("PRIMARY")
+                row.components[2].setStyle("SUCCESS")
+                return messageSent.edit({ embeds: [await embedsTienda.consumibles()], components: [row] })
+            }
         })
     }
 }

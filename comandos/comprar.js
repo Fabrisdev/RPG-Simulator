@@ -5,6 +5,9 @@ module.exports = {
         const comprarItem = async itemID => {
             const itemSnap = client.items.get(itemID)
             
+            //Revisar si el item existe
+            if(!itemSnap) return
+
             const userSnap = client.jugadores.get(String(userID))
 
             //Revisar si tiene suficiente dinero

@@ -1,27 +1,52 @@
 const coin = "<:coin:929204039697195018>"
 
 module.exports.armas = async () => {
-    const pagina = new Discord.MessageEmbed()
+    const embedTienda = new Discord.MessageEmbed()
         .setTitle("OBJETOS A LA VENTA:")
         .setColor(0x00AE86)
         .setDescription("Utilice `rpg comprar {item}` para comprar.")
         .setTimestamp()
-        .setFooter("Sección de armas", client.user.avatarURL())
-    const itemsSnap = await db.collection("items").get()
-    let armas = ""
-    itemsSnap.forEach(doc => {
-        armas = armas+`${doc.id}. ${doc.data().emoji} Precio: ${doc.data().precio} ${coin}: +${doc.data().ataque} AT\n`
+    embedTienda.setFooter("Sección de armas", client.user.avatarURL())
+    const itemsSnap = client.items
+    let mensaje = ""
+    itemsSnap.forEach((item, itemID) => {
+        if(item.tipo != "Armas") return
+        mensaje = mensaje+`${itemID}. ${item.emoji} Precio: ${item.precio} ${coin}: +${item.ataque} AT\n`
     })
-    pagina.addField("ARMAS", armas)
-    return pagina
+    embedTienda.addField("ARMAS", mensaje)
+    return embedTienda
 }
 
+module.exports.armaduras = async () => {
+    const embedTienda = new Discord.MessageEmbed()
+        .setTitle("OBJETOS A LA VENTA:")
+        .setColor(0x00AE86)
+        .setDescription("Utilice `rpg comprar {item}` para comprar.")
+        .setTimestamp()
+    embedTienda.setFooter("Sección de armaduras", client.user.avatarURL())
+    const itemsSnap = client.items
+    let mensaje = ""
+    itemsSnap.forEach((item, itemID) => {
+        if(item.tipo != "Armaduras") return
+        mensaje = mensaje+`${itemID}. ${item.emoji} Precio: ${item.precio} ${coin}: +${item.defensa} DEF\n`
+    })
+    embedTienda.addField("ARMADURAS", mensaje)
+    return embedTienda
+}
 
-module.exports.armaduras = new Discord.MessageEmbed()
-    .setTitle("OBJETOS A LA VENTA:")
-    .setColor(0x00AE86)
-    .setDescription("Utilice `rpg comprar {item}` para comprar.")
-    .setTimestamp()
-    .addField("\u200B", "**ARMAS**\n1- **Espada de madera** => 5 AT\n2- **Hacha de madera** => 3 AT")
-    .addField("\u200B", "**ARMADURAS**")
-    .setFooter("Página 2/2", client.user.avatarURL())
+module.exports.consumibles = async () => {
+    const embedTienda = new Discord.MessageEmbed()
+        .setTitle("OBJETOS A LA VENTA:")
+        .setColor(0x00AE86)
+        .setDescription("Utilice `rpg comprar {item}` para comprar.")
+        .setTimestamp()
+    embedTienda.setFooter("Sección de consumibles", client.user.avatarURL())
+    const itemsSnap = client.items
+    let mensaje = ""
+    itemsSnap.forEach((item, itemID) => {
+        if(item.tipo != "Consumibles") return
+        mensaje = mensaje+`${itemID}. ${item.emoji} Precio: ${item.precio} ${coin}: +${item.curacion} HP\n`
+    })
+    embedTienda.addField("CONSUMIBLES", mensaje)
+    return embedTienda
+}
