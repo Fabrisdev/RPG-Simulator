@@ -1,28 +1,53 @@
+const { MessageActionRow, MessageButton } = require('discord.js')
 module.exports = {
     aliases: ["shop"],
     run: async (msg, args) => {
         if(args.length > 1) return
+        const embedsTienda = require("../clases/embedsTienda.js")
+        
+        const row = new MessageActionRow().addComponents(
+            new MessageButton()
+                .setCustomId("armas")
+                .setLabel('ARMAS')
+                .setStyle('SUCCESS')
+                .setDisabled(true),
+            new MessageButton()
+                .setCustomId("armadura")
+                .setLabel('ARMADURA')
+                .setStyle('PRIMARY'),
+            new MessageButton()
+                .setCustomId("comida")
+                .setLabel('COMIDA')
+                .setStyle('PRIMARY'),
+        )
 
-        /*switch(args[0]){
-            case "2":
-                msg.channel.send({ content: "Aquí puede ver los objetos a la venta", embeds: [embedsTienda.pagina2] }); break
-            default:
-                msg.channel.send({ content: "Aquí puede ver los objetos a la venta", embeds: [embedsTienda.pagina1] }); break
-        }*/
-        const embedTienda = new Discord.MessageEmbed()
-            .setTitle("OBJETOS A LA VENTA:")
-            .setColor(0x00AE86)
-            .setDescription("Utilice `rpg comprar {item}` para comprar.")
-            .setTimestamp()
-            .setFooter("Página 1/2", client.user.avatarURL())
+        let messageSent = msg.channel.send({ embeds: [await embedsTienda.armas()], components: [row]})
 
-        const itemsSnap = await db.collection("items").get()
-        let mensaje = ""
-        const coin = "<:coin:929204039697195018>"
-        itemsSnap.forEach(doc => {
-            mensaje = mensaje+`${doc.id}. ${doc.data().emoji} Precio: ${doc.data().precio} ${coin}: +${doc.data().ataque} AT\n`
+        const filter = (interaction) => {
+            if(interaction.user.id === msg.author.id) return true
+            return interaction.reply({ content: "Este no es tu mensaje!", ephemeral: true })  
+        }
+        
+        const collector = msg.channel.createMessageComponentCollector({ filter, time: 30000 })
+
+        collector.on("collect", async (ButtonInteraction) => {
+            ButtonInteraction.deferUpdate()
+            const buttonID = ButtonInteraction.customId
+            /*if(buttonID === "comprar"){
+                row.components[0].setDisabled(true)
+                row.components[1].setDisabled(false)
+                row.components[0].setStyle("SUCCESS")
+                row.components[1].setStyle("PRIMARY")
+                return messageSent.edit({ content: "Aquí puede ver los objetos a la venta", embeds: [embedsTienda.pagina1], components: [row] })
+            }
+            if(buttonID === "vender"){
+                row.components[0].setDisabled(false)
+                row.components[1].setDisabled(true)
+                row.components[0].setStyle("PRIMARY")
+                row.components[1].setStyle("SUCCESS")
+                return messageSent.edit({ content: "Con qué quieres vender un objeto tuyo, ¿Eh?", embeds: [embedsTienda.paginavender1], components: [row] })
+            }
+            */
         })
-        embedTienda.addField("ARMAS", mensaje)
-        msg.channel.send({ embeds: [embedTienda] })
     }
 }

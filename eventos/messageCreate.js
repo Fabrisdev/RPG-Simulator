@@ -2,17 +2,17 @@ module.exports = async (msg) => {
     if(!msg.guild) return
     if(msg.author.bot) return
     const serverID = msg.guild.id
-    const usuario = msg.author.id
-    const usuarioSnap = await db.collection("usuarios").doc(usuario).get()
     const prefix = client.servers.get(serverID).prefix
     if(msg.content.includes(`<@!${client.user.id}>`)) msg.channel.send(`La prefix actualmente es: ${prefix}`)
+    const userID = msg.author.id
+    const userSnap = client.jugadores.get(String(userID))
     if(!msg.content.toLowerCase().startsWith(prefix)) return
 
-    //PREPARAR USUARIO PARA EL JUEGO
-    if(!usuarioSnap.exists){ //El usuario nunca ha jugado
+    //Preparar usuario para el juego
+    if(!userSnap){ //El usuario nunca ha jugado
         await msg.channel.send("¡Hey! Parece que eres nuevo aquí. Deja que te explique como funcionan las cosas aquí...")
         msg.channel.sendTyping()
-        const embedDatos = new Discord.MessageEmbed()
+        const embedBienvenida = new Discord.MessageEmbed()
             .setTitle(`¡Hey ${msg.author.username}! ¡Bienvenido a RPG Simulator!`)
             .setColor(0x00AE86)
             .setDescription("El propósito del juego es luchar, mejorar tus armas y avanzar de mundo a nuevos más dificiles pero con más recursos.\nHay un total de **10** mundos (tú empiezas en el #1).")
@@ -22,16 +22,19 @@ module.exports = async (msg) => {
                 { name: "__DUNGEONS Y MUNDOS__", value: ":star: Cuando creas estar preparado, compra un **portal** en la `tienda` el cual te llevará hacia tu próxima **dungeon con un jefe**.\n:star: Si logras vencerlo, desbloquearás un **nuevo mundo** al que podrás ir, con muchos mayores recursos :palm_tree:, nuevas herramientas :axe: y nuevos enemigos!" },
                 { name: "__MÁS__", value: ":star: Revisa todos los comandos usando `ayuda`. Te será de gran utilidad.\n:star: Si tienes dudas, puedes revisar la :globe_with_meridians: **[página web](https://rpgsimulator.w3spaces.com)**" }
             )
-        await sleep(1500)
-        msg.channel.send({ embeds: [embedDatos] })
-        //Prepararlo
-        db.collection("usuarios").doc(usuario).set({
+        await utils.sleep(1500)
+        msg.channel.send({ embeds: [embedBienvenida] })
+
+        const Player = require("../clases/Player.js")
+        const defaultItems = {
             salud: 40,
             dinero: 0,
             nivel: 0,
             xp: 0,
-            items: []
-        })
+            items: {}
+        }
+        client.jugadores.set(String(userID), new Player(String(userID), defaultItems))
+        db.collection("usuarios").doc(userID).set({ ...defaultItems })
         return
     }
 

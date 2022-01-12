@@ -4,11 +4,11 @@ module.exports = {
         const cmd = args[0]
         if(cmd === "set"){
             const nuevaPrefix = args[1]
-            client.servers.get(serverID).setPrefix(nuevaPrefix)
+            client.servers.get(serverID).prefix = nuevaPrefix
             return msg.channel.send(`La prefix ha sido cambiada a ${nuevaPrefix} satisfactoriamente!`)
         }
         if(cmd === "reset"){
-            client.servers.get(serverID).setPrefix("rpg ")
+            client.servers.get(serverID).prefix = "rpg "
             return msg.channel.send("La prefix ha sido devuelta a la por defecto satisfactoriamente!")
         }
     }

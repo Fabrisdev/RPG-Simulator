@@ -3,27 +3,24 @@ module.exports = {
     run: async (msg, args) => {
         const userID = msg.author.id
         const comprarItem = async itemID => {
-            const itemSnap = await db.collection("items").doc(itemID).get()
-            if(!itemSnap.exists) return
+            const itemSnap = client.items.get(itemID)
             
-            const userSnap = await db.collection("usuarios").doc(userID).get()
+            const userSnap = client.jugadores.get(String(userID))
 
             //Revisar si tiene suficiente dinero
-            if(userSnap.data().dinero < itemSnap.data().precio) return msg.channel.send("No tienes suficiente dinero para comprar ese item.")
+            if(userSnap.dinero < itemSnap.precio) return msg.channel.send("No tienes suficiente dinero para comprar ese item.")
 
             //Revisar si tiene el item
-            for(let i = 0; i < userSnap.data().items.length; i++){
-                if(userSnap.data().items[i] == itemID) return msg.channel.send("Ya tienes ese item.")
-            }
+            if(userSnap.items.hasOwnProperty(String(itemID))) return msg.channel.send("Ya tienes ese item.")
 
-            db.collection("usuarios").doc(userID).update({
-                dinero: FieldValue.increment(-itemSnap.data().precio),
-                items: FieldValue.arrayUnion(parseInt(itemID, 10))
-            })
+            client.jugadores.get(String(userID)).incrementarDinero(-itemSnap.precio)
+            client.jugadores.get(String(userID)).incrementarItems(itemID)
 
-            msg.channel.send(`Has comprado el item: ${itemSnap.data().nombre} ${itemSnap.data().emoji}`)
-            msg.channel.send(`${itemSnap.data().precio} social credits han sido restados de tu cuenta.`)
+            msg.channel.send(`Has comprado el item: ${itemSnap.nombre} ${itemSnap.emoji}`)
+            msg.channel.send(`${itemSnap.precio} social credits han sido restados de tu cuenta.`)
         }
+
+        if(args.length != 1) return
         comprarItem(args[0])
     }
 }

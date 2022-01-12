@@ -1,13 +1,13 @@
 module.exports = {
     run: async (msg, args) => {
-        //await msg.channel.send("Por favor, espera un momento. Esto puede llevar un tiempo...")
         const topTipo = args[0]
         if(topTipo === "socialcredits" || topTipo === "sc" || topTipo === "credits"){
+            await msg.channel.send("Por favor, espera un momento. Esto puede llevar un tiempo...")
             msg.channel.sendTyping()
-            const usersSnap = await db.collection("usuarios").get()
+            const usersSnap = client.jugadores
             const jugadores = []
-            usersSnap.forEach(doc => {
-                jugadores.push({ id: doc.id, dinero: doc.data().dinero })
+            usersSnap.forEach(player => {
+                jugadores.push({ id: player.id, dinero: player.dinero })
             })
             jugadores.sort(utils.obtenerOrdenInverso("dinero")).slice(0,10)
             const embedDatos = new Discord.MessageEmbed()
@@ -32,11 +32,12 @@ module.exports = {
         }
 
         if(topTipo === "nivel" || topTipo === "lvl" || topTipo === "level" || !topTipo){
+            await msg.channel.send("Por favor, espera un momento. Esto puede llevar un tiempo...")
             msg.channel.sendTyping()
-            const usersSnap = await db.collection("usuarios").get()
+            const usersSnap = client.jugadores
             const jugadores = []
-            usersSnap.forEach(doc => {
-                jugadores.push({ id: doc.id, nivel: doc.data().nivel })
+            usersSnap.forEach(player => {
+                jugadores.push({ id: player.id, nivel: player.nivel })
             })
             jugadores.sort(utils.obtenerOrdenInverso("nivel")).slice(0,10)
             const embedDatos = new Discord.MessageEmbed()

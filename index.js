@@ -1,13 +1,11 @@
 Discord = require("discord.js")
-Metodos = require("./metodos.js")
-utils = new Metodos()
+utils = require("./clases/utils.js")
 require("dotenv").config()
-sleep = (ms = 1000) => new Promise(resolve => setTimeout(resolve, ms))
-peleoRecientemente = new Set()
 SlashCommands = require('@discordjs/builders')
 require("dotenv").config()
+
 //Inicializar Firebase
-admin = require("firebase-admin")
+const admin = require("firebase-admin")
 const serviceAccount = JSON.parse(process.env.TOKEN_FIREBASE)
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -90,7 +88,6 @@ client.login(process.env.TOKEN)
     .then(() => {
         console.log(`[${timeH}:${timeM}:${timeS} INFO]: RPG-S ha sido iniciado satisfactoriamente!`)
         console.log(`[${timeH}:${timeM}:${timeS} INFO]: Actualmente se encuentra conectado en: ${client.guilds.cache.size} servidores\n`)
-        embedsTienda = require('./embedsTienda.js')
     })
     .catch((err) => {
         console.error(`[${timeH}:${timeM}:${timeS} ERROR]: Error al iniciar sesión: ${err}`)
