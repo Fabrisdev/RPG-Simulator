@@ -5,6 +5,7 @@ module.exports = class Player{
     _nivel;
     _salud;
     _xp;
+    _ultimoDaily;
 
     constructor(id, data){
         this._id = id
@@ -13,6 +14,7 @@ module.exports = class Player{
         this._nivel = data.nivel
         this._salud = data.salud
         this._xp = data.xp
+        this._ultimoDaily = data.ultimoDaily
     }
 
     get id(){
@@ -39,6 +41,10 @@ module.exports = class Player{
         return this._xp
     }
 
+    get ultimoDaily(){
+        return this._ultimoDaily
+    }
+
     set dinero(value){
         this._dinero = value
         db.collection("usuarios").doc(this._id).update({ dinero: value })
@@ -62,6 +68,11 @@ module.exports = class Player{
     set xp(value){
         this._xp = value
         db.collection("usuarios").doc(this._id).update({ xp: value })
+    }
+
+    set ultimoDaily(value){
+        this._ultimoDaily = value
+        db.collection("usuarios").doc(this._id).update({ ultimoDaily: value })
     }
 
     incrementarDinero(value){

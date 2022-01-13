@@ -50,3 +50,20 @@ module.exports.consumibles = async () => {
     embedTienda.addField("CONSUMIBLES", mensaje)
     return embedTienda
 }
+
+module.exports.mazmorras = async () => {
+    const embedTienda = new Discord.MessageEmbed()
+        .setTitle("OBJETOS A LA VENTA:")
+        .setColor(0x00AE86)
+        .setDescription("Utilice `rpg comprar {item}` para comprar.")
+        .setTimestamp()
+    embedTienda.setFooter("Sección de mazmorras", client.user.avatarURL())
+    const itemsSnap = client.items
+    let mensaje = ""
+    itemsSnap.forEach((item, itemID) => {
+        if(item.tipo != "Mazmorras") return
+        mensaje = mensaje+`${itemID}. ${item.emoji} Precio: ${item.precio} ${coin}\n`
+    })
+    embedTienda.addField("MAZMORRAS", mensaje)
+    return embedTienda
+}

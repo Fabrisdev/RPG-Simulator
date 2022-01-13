@@ -19,6 +19,10 @@ module.exports = {
                 .setCustomId("consumibles")
                 .setLabel('CONSUMIBLES')
                 .setStyle('PRIMARY'),
+            new MessageButton()
+                .setCustomId("mazmorras")
+                .setLabel("MAZMORRAS")
+                .setStyle("PRIMARY"),
         )
 
         let messageSent = await msg.channel.send({ embeds: [await embedsTienda.armas()], components: [row]})
@@ -33,33 +37,26 @@ module.exports = {
         collector.on("collect", async (ButtonInteraction) => {
             ButtonInteraction.deferUpdate()
             const buttonID = ButtonInteraction.customId
+            for(let i = 0; i < row.components.length; i++){
+                row.components[i].setDisabled(false).setStyle("PRIMARY")
+            }
             if(buttonID === "armas"){
-                row.components[0].setDisabled(true)
-                row.components[1].setDisabled(false)
-                row.components[2].setDisabled(false)
-                row.components[0].setStyle("SUCCESS")
-                row.components[1].setStyle("PRIMARY")
-                row.components[2].setStyle("PRIMARY")
+                row.components[0].setDisabled(true).setStyle("SUCCESS")
                 return messageSent.edit({ embeds: [await embedsTienda.armas()], components: [row] })
             }
             if(buttonID === "armadura"){
-                row.components[0].setDisabled(false)
-                row.components[1].setDisabled(true)
-                row.components[2].setDisabled(false)
-                row.components[0].setStyle("PRIMARY")
-                row.components[1].setStyle("SUCCESS")
-                row.components[2].setStyle("PRIMARY")
+                row.components[1].setDisabled(true).setStyle("SUCCESS")
                 return messageSent.edit({ embeds: [await embedsTienda.armaduras()], components: [row] })
             }
             if(buttonID === "consumibles"){
-                row.components[0].setDisabled(false)
-                row.components[1].setDisabled(false)
-                row.components[2].setDisabled(true)
-                row.components[0].setStyle("PRIMARY")
-                row.components[1].setStyle("PRIMARY")
-                row.components[2].setStyle("SUCCESS")
+                row.components[2].setDisabled(true).setStyle("SUCCESS")
                 return messageSent.edit({ embeds: [await embedsTienda.consumibles()], components: [row] })
             }
+            if(buttonID === "mazmorras"){
+                row.components[3].setDisabled(true).setStyle("SUCCESS")
+                return messageSent.edit({ embeds: [await embedsTienda.mazmorras()], components: [row] })
+            }
         })
+
     }
 }

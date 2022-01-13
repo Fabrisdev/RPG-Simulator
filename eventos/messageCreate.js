@@ -46,6 +46,7 @@ module.exports = async (msg) => {
 
     // Ejecuta el comando enviando el client, el mensaje y los argumentos.
     try{
+        console.log(client.jugadores.get(String(userID)))
         await cmd.run(msg, args)
     }catch(error){
         console.error(`[CMD] Ha ocurrido un error mientras ${msg.author.tag} ejecutaba el comando ${command}. Para más información leer debajo:`)

@@ -4,15 +4,6 @@ module.exports = {
     aliases: ["fight"],
     run: async (msg, args) => {
         const userID = msg.author.id
-        const userSnap = client.jugadores.get(String(userID))
-        const salud = userSnap.salud
-        const nivel = userSnap.nivel
-        const xp = userSnap.xp
-        const personajes = ["seguidor de la grasa"]
-        const dineroDado = utils.generarNumeroRandom(25,65)
-        const xpDada = utils.generarNumeroRandom(6, 14)
-        const maxXP = Math.round((1.2**nivel)*100)
-        const vidaConsumida = utils.generarNumeroRandom(4,17)
 
         if(!(args[0] === "--nocooldown") || !(msg.member.roles.cache.some(role => role.name === "debug"))){ //Si las args no son --nc o no tiene el rol debug (o ambas)
             if(peleoRecientemente.has(userID))
@@ -23,6 +14,20 @@ module.exports = {
                 peleoRecientemente.delete(userID)
             }, 30000)
         }
+
+        const userSnap = client.jugadores.get(String(userID))
+        const salud = userSnap.salud
+        const nivel = userSnap.nivel
+        const xp = userSnap.xp
+        const personajes = [
+            { victoria: "Luchaste contra un seguidor de la grasa y ganaste", derrota: "Luchaste contra un seguidor de la grasa pero esta mañana se había tomado su leche papu por lo que perdiste"},
+            { victoria: "Hiciste enojar a Dann y lo terminaron baneando a él", derrota: "Hiciste enojar a Dann y te mató (igual lo banearon más tarde)" },
+            { victoria: "Hiciste unos buenos momazos y te donaron tus subs", derrota: "Hiciste unos horribles momazos y todos tus subs te odian ahora >:v" }
+        ]
+        const dineroDado = utils.generarNumeroRandom(25,65)
+        const xpDada = utils.generarNumeroRandom(6, 14)
+        const maxXP = Math.round((1.2**nivel)*100)
+        const vidaConsumida = utils.generarNumeroRandom(4,17)
 
         let mensaje = ""
         const embedMensaje = new Discord.MessageEmbed()
@@ -35,7 +40,7 @@ module.exports = {
             msg.react("☠️")
             embedMensaje.setTitle("<:Ay:930795645885878292> Derrota <:Ay:930795645885878292>")
             embedMensaje.setColor(16717904)
-            mensaje = mensaje+`**Luchaste contra un ${utils.elegirRandom(personajes)} y perdiste.**\n`
+            mensaje = mensaje+"**"+utils.elegirRandom(personajes)["derrota"]+"**\n"
             if(nivel - 1 <= 0){
                 mensaje = mensaje+"Tu vida ha sido restaurada. **`Nivel actual`**: `0`\n"
                 mensaje = mensaje+"Has muerto, sin embargo no has perdido un nivel ya que estás en el nivel minimo.\n"
@@ -53,7 +58,7 @@ module.exports = {
 
         msg.react("<a:checkmark:930793535718961153>")
         embedMensaje.setTitle("<a:party:930795123531468870> Victoria <a:party:930795123531468870>")
-        mensaje = mensaje +`**Luchaste contra un ${utils.elegirRandom(personajes)} y ganaste.**\n`
+        mensaje = mensaje +"**"+utils.elegirRandom(personajes)["victoria"]+"**\n"
         mensaje = mensaje+"Perdiste "+vidaConsumida+" puntos de vida. **`Vida restante`**: `"+(salud - vidaConsumida)+"`\n"
         mensaje = mensaje+`Conseguiste +$${dineroDado} y +${xpDada} XP\n`
         client.jugadores.get(String(userID)).incrementarDinero(dineroDado)
