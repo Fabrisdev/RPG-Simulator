@@ -3,8 +3,8 @@ module.exports = class Server {
     constructor(serverId){
         this.serverId = serverId
         db.collection("servidores").doc(serverId).get().then(snap => {
-            if(snap.exists && snap.data()._prefix) this._prefix = snap.data()._prefix
-            else db.collection("servidores").doc(serverId).set({ _prefix: this._prefix })
+            if(snap.exists && snap.data().prefix) this._prefix = snap.data().prefix
+            else db.collection("servidores").doc(serverId).set({ prefix: this._prefix })
         })
     }
     
@@ -17,7 +17,7 @@ module.exports = class Server {
     }
 
     set prefix(prefix){
-        this._prefix = prefix.toLowerCase()
+        this._prefix = prefix
         db.collection("servidores").doc(this.serverId).update({ prefix: this._prefix })
     }
 }
