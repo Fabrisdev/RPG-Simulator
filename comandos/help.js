@@ -43,6 +43,16 @@ module.exports = {
                     **Uso**: Regenera ${itemSnap.curacion} HP
                     `)
             }
+            
+            if(itemSnap.tipo == "Mazmorras"){
+                embedAyuda.setTitle(itemSnap.nombre)
+                embedAyuda.setDescription(`
+                    **ID**: ${args[1]}
+                    **Tipo**: ${itemSnap.tipo}
+                    **Emoji**: ${itemSnap.emoji}
+                    **Uso**: ${itemSnap.utilidad}
+                    `)
+            }
             msg.channel.send({ embeds: [embedAyuda] })
         }
     }
