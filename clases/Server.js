@@ -1,3 +1,6 @@
+const admin = require("firebase-admin")
+const db = admin.firestore()
+
 module.exports = class Server {
     _prefix = 'rpg '
     constructor(serverId){

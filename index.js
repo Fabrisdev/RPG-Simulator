@@ -1,6 +1,7 @@
 Discord = require("discord.js")
 utils = require("./clases/utils.js")
 require("dotenv").config()
+//hacer .SlashCommandBuilder
 SlashCommands = require('@discordjs/builders')
 require("dotenv").config()
 
@@ -11,13 +12,12 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 })
 
-db = admin.firestore()
-FieldValue = require("firebase-admin").firestore.FieldValue
-
+//Inicializar client
 client = new Discord.Client({ 
     intents: [
       'GUILDS',
-      'GUILD_MESSAGES'
+      'GUILD_MESSAGES',
+      'GUILD_MESSAGE_REACTIONS'
     ],
     ws: { 
       properties: { 
@@ -51,14 +51,18 @@ for(const file of readdirSync("./comandos/")){
 
 //CONTROLADOR DE SLASH COMMANDS
 
-const fs = require('fs');
-
 client.slashComandos = new Discord.Collection()
-const commandFiles = fs.readdirSync('./comandosSlash').filter(file => file.endsWith('.js'));
+const commandFiles = readdirSync('./comandosSlash').filter(file => file.endsWith('.js'))
 
 for (const file of commandFiles) {
-	const command = require(`./comandosSlash/${file}`);
-	client.slashComandos.set(command.data.name, command);
+	const command = require(`./comandosSlash/${file}`)
+	client.slashComandos.set(command.data.name, command)
+}
+
+client.botones = new Discord.Collection()
+for (const file of readdirSync('./botones').filter(file => file.endsWith('.js'))) {
+	const boton = require(`./botones/${file}`)
+	client.botones.set(boton.name, boton)
 }
 
 //CONTROLADOR DE EVENTOS
@@ -78,17 +82,12 @@ for(const file of readdirSync("./eventos/")){
     }
 }
 
-//PROPIEDAD LOGIN
-
-const timeH = new Date().getHours()
-const timeM = new Date().getMinutes()
-const timeS = new Date().getSeconds()
-
+//LOGIN
 client.login(process.env.TOKEN)
     .then(() => {
-        console.log(`[${timeH}:${timeM}:${timeS} INFO]: RPG-S ha sido iniciado satisfactoriamente!`)
-        console.log(`[${timeH}:${timeM}:${timeS} INFO]: Actualmente se encuentra conectado en: ${client.guilds.cache.size} servidores\n`)
+        console.log(`[INFO]: RPG-S ha sido iniciado satisfactoriamente!`)
+        console.log(`[INFO]: Actualmente se encuentra conectado en: ${client.guilds.cache.size} servidores\n`)
     })
     .catch((err) => {
-        console.error(`[${timeH}:${timeM}:${timeS} ERROR]: Error al iniciar sesión: ${err}`)
+        console.error(`[ERROR]: Error al iniciar sesión: ${err}`)
     })

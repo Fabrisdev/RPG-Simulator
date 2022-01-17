@@ -1,3 +1,6 @@
+const admin = require("firebase-admin")
+const db = admin.firestore()
+const FieldValue = require("firebase-admin").firestore.FieldValue
 
 module.exports = class Player{
     _dinero;
@@ -6,6 +9,8 @@ module.exports = class Player{
     _salud;
     _xp;
     _ultimoDaily;
+    _mundo;
+    _ultimoMundo;
 
     constructor(id, data){
         this._id = id
@@ -15,6 +20,8 @@ module.exports = class Player{
         this._salud = data.salud
         this._xp = data.xp
         this._ultimoDaily = data.ultimoDaily
+        this._mundo = data.mundo
+        this._ultimoMundo = data.ultimoMundo
     }
 
     get id(){
@@ -43,6 +50,14 @@ module.exports = class Player{
 
     get ultimoDaily(){
         return this._ultimoDaily
+    }
+
+    get mundo(){
+        return this._mundo
+    }
+
+    get ultimoMundo(){
+        return this._ultimoMundo
     }
 
     set dinero(value){

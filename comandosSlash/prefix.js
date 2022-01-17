@@ -12,7 +12,7 @@ module.exports = {
             subcommand
                 .setName("reset")
                 .setDescription("Devuelve la prefix del bot a la original.")    
-        ),
+        ),      
     async execute(interaction){
         await interaction.deferReply()
         if(!interaction.member.permissions.has("MANAGE_GUILD")) return interaction.editReply("No puedes ejecutar ese comando ya que no tienes el permiso necesario. (`MANAGE_GUILD`)")
