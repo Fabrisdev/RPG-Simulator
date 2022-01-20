@@ -137,7 +137,12 @@ module.exports = class Player{
     }
 
     incrementarConsumibles(value, cantidad){
-        const previaCantidad = this._consumibles[value].cantidad
+        let previaCantidad = undefined
+        try{
+            previaCantidad = this._consumibles[value].cantidad
+        }catch(err){
+            previaCantidad = 0
+        }
         this._consumibles[value] = { cantidad: previaCantidad+cantidad }
         db.collection("usuarios").doc(this._id).update({
             [`consumibles.${value}`]:
