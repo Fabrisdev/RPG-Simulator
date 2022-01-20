@@ -4,11 +4,6 @@ module.exports = {
         const { MessageActionRow, MessageButton } = require('discord.js')
         if(args.length > 1) return
         const embedsTienda = require("../clases/embedsAEnviar.js")
-        const getRandomId = () => (Math.random() * 100).toString(36).replace('.','');
-        const ArmasIDRandom = getRandomId()
-        const ArmaduraIDRandom = getRandomId()
-        const ConsumiblesIDRandom = getRandomId()
-        const MazmorrasIDRandom = getRandomId()
         const botones = new MessageActionRow().addComponents(
             new MessageButton()
                 .setCustomId('tienda_armas')

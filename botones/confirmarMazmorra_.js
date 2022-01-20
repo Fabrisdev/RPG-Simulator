@@ -7,11 +7,13 @@ module.exports = {
         if (interaction.user.id !== msgreply.author.id) return
         const mensaje = await interaction.message
         const [,opcion] = interaction.customId.split('_')
-        const embedsAEnviar = require("../clases/embedsAEnviar.js")
 
         if(opcion == "confirmar"){
-            mensaje.edit({ content: "Empezando mazmorra...", components: [] })
-            Mazmorra.jugar()
+            await mensaje.edit({ content: "Empezando mazmorra...", components: [] })
+            const userSnap = client.jugadores.get(mensaje.mentions.repliedUser.id)
+            const Mazmorra = require("../clases/Mazmorra.js")
+            return Mazmorra.jugarMazmorra(userSnap.ultimoMundo, [mensaje.mentions.repliedUser], mensaje)
+            
         }
         return mensaje.edit({ content: "Mazmorra cancelada.", components: [] })
     }

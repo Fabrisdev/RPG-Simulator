@@ -11,6 +11,8 @@ module.exports = class Player{
     _ultimoDaily;
     _mundo;
     _ultimoMundo;
+    _enMazmorra;
+    _consumibles;
 
     constructor(id, data){
         this._id = id
@@ -22,6 +24,8 @@ module.exports = class Player{
         this._ultimoDaily = data.ultimoDaily
         this._mundo = data.mundo
         this._ultimoMundo = data.ultimoMundo
+        this._enMazmorra = data.enMazmorra || false
+        this._consumibles = data.consumibles
     }
 
     get id(){
@@ -60,6 +64,14 @@ module.exports = class Player{
         return this._ultimoMundo
     }
 
+    get enMazmorra(){
+        return this._enMazmorra
+    }
+
+    get consumibles(){
+        return this._consumibles
+    }
+
     set dinero(value){
         this._dinero = value
         db.collection("usuarios").doc(this._id).update({ dinero: value })
@@ -90,6 +102,10 @@ module.exports = class Player{
         db.collection("usuarios").doc(this._id).update({ ultimoDaily: value })
     }
 
+    set enMazmorra(value){
+        this._enMazmorra = value
+    }
+
     incrementarDinero(value){
         this._dinero = this._dinero + value
         db.collection("usuarios").doc(this._id).update({ dinero: FieldValue.increment(value) })
@@ -111,7 +127,23 @@ module.exports = class Player{
     }
 
     incrementarItems(value){
-        this._items[value] = {encantamientos: [] }
-        db.collection("usuarios").doc(this._id).update({ items: {[value]: {encantamientos: []} }})
+        this._items[value] = { encantamientos: [] }
+        db.collection("usuarios").doc(this._id).update({
+            [`items.${value}`]:
+            {
+                encantamientos: []
+            }
+        })
+    }
+
+    incrementarConsumibles(value, cantidad){
+        const previaCantidad = this._consumibles[value].cantidad
+        this._consumibles[value] = { cantidad: previaCantidad+cantidad }
+        db.collection("usuarios").doc(this._id).update({
+            [`consumibles.${value}`]:
+            {
+                cantidad: previaCantidad+cantidad
+            }
+        })
     }
 }

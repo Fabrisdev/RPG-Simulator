@@ -59,6 +59,8 @@ for (const file of commandFiles) {
 	client.slashComandos.set(command.data.name, command)
 }
 
+//CONTROLADOR DE BOTONES
+
 client.botones = new Discord.Collection()
 for (const file of readdirSync('./botones').filter(file => file.endsWith('.js'))) {
 	const boton = require(`./botones/${file}`)

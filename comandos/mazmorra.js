@@ -53,20 +53,23 @@ module.exports = {
             return reaction.emoji.name === "checkmark" && (user.id == msg.author.id || user.id == amigoID)
         }
 
-        //const Mazmorra = require("../clases/Mazmorra.js")
-        const collector = msg.createReactionCollector({ filter, time: 10000 })
+        const collector = msg.createReactionCollector({ filter, time: 30000 })
         const usersReaccion = new Set()
 
         collector.on('collect', (reaction, user) => {
-            usersReaccion.add(user.id)
+            console.log(user)
+            usersReaccion.add(user)
             if(usersReaccion.size == 2){
                     msg.channel.send("Empezando mazmorra...")
+                    const Mazmorra = require("../clases/Mazmorra.js")
+                    Mazmorra.jugarMazmorra(userSnap.ultimoMundo, Array.from(usersReaccion), msg)
                     collector.stop()
             }
         })
 
         collector.on('end', collected => {
-            if(usersReaccion.size != 2) msg.channel.send("Ha pasado el limite de tiempo y ambos jugadores no han reaccionado. Mazmorra cancelada.")
+            if(usersReaccion.size != 2)
+                msg.channel.send("Ha pasado el limite de tiempo y ambos jugadores no han reaccionado. Mazmorra cancelada.")
         })
     }
 }
