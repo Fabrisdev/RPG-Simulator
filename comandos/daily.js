@@ -2,7 +2,7 @@ module.exports = {
     aliases: ["diario"],
     run: async (msg, args) => {
         const userID = msg.author.id
-        const userSnap = client.jugadores.get(String(userID))
+        const userSnap = client.jugadores.get(userID)
         const tiempoAhora = Math.ceil(Date.now() / 1000)
 
         //Revisar si no ha usado el comando antes o ya ha pasado el tiempo
@@ -16,10 +16,10 @@ module.exports = {
                 .setFooter("¡Disfruta tus recompenzas!", client.user.avatarURL())
                 .setTimestamp()
                 .setDescription(`Has recibido: +${xpDada} XP y +$${dineroDado}`)
-            client.jugadores.get(String(userID)).incrementarDinero(dineroDado)
-            client.jugadores.get(String(userID)).incrementarXP(xpDada)
+            client.jugadores.get(userID).incrementarDinero(dineroDado)
+            client.jugadores.get(userID).incrementarXP(xpDada)
             msg.channel.send({ content: "Has reclamado tus recompenzas diarias satisfactoriamente!", embeds: [embedRecompenzas] })
-            return client.jugadores.get(String(userID)).ultimoDaily = tiempoAhora
+            return client.jugadores.get(userID).ultimoDaily = tiempoAhora
         }
 
         msg.channel.send("Lo siento, ya has reclamado tus recompenzas diarias. Vuelve mañana!")

@@ -15,7 +15,7 @@ module.exports = {
             }, 30000)
         }
 
-        const userSnap = client.jugadores.get(String(userID))
+        const userSnap = client.jugadores.get(userID)
         const salud = userSnap.salud
         const nivel = userSnap.nivel
         const xp = userSnap.xp
@@ -44,14 +44,14 @@ module.exports = {
             if(nivel - 1 <= 0){
                 mensaje = mensaje+"Tu vida ha sido restaurada. **`Nivel actual`**: `0`\n"
                 mensaje = mensaje+"Has muerto, sin embargo no has perdido un nivel ya que estás en el nivel minimo.\n"
-                client.jugadores.get(String(userID)).nivel = 0
-                client.jugadores.get(String(userID)).salud = 40
+                client.jugadores.get(userID).nivel = 0
+                client.jugadores.get(userID).salud = 40
             }else{
                 mensaje = mensaje+"Tu vida ha sido restaurada. **`Nivel actual`**: `"+(nivel-1)+"`\n"
-                client.jugadores.get(String(userID)).incrementarNivel(-1)
-                client.jugadores.get(String(userID)).incrementarSalud(40+((nivel-1)*5))
+                client.jugadores.get(userID).incrementarNivel(-1)
+                client.jugadores.get(userID).incrementarSalud(40+((nivel-1)*5))
             }
-            client.jugadores.get(String(userID)).xp = 0
+            client.jugadores.get(userID).xp = 0
             embedMensaje.setDescription(mensaje)
             return msg.channel.send({ embeds: [embedMensaje] })
         }
@@ -61,16 +61,16 @@ module.exports = {
         mensaje = mensaje +"**"+utils.elegirRandom(personajes)["victoria"]+"**\n"
         mensaje = mensaje+"Perdiste "+vidaConsumida+" puntos de vida. **`Vida restante`**: `"+(salud - vidaConsumida)+"`\n"
         mensaje = mensaje+`Conseguiste +$${dineroDado} y +${xpDada} XP\n`
-        client.jugadores.get(String(userID)).incrementarDinero(dineroDado)
-        client.jugadores.get(String(userID)).incrementarXP(xpDada)
-        client.jugadores.get(String(userID)).incrementarSalud(-vidaConsumida)
+        client.jugadores.get(userID).incrementarDinero(dineroDado)
+        client.jugadores.get(userID).incrementarXP(xpDada)
+        client.jugadores.get(userID).incrementarSalud(-vidaConsumida)
 
         embedMensaje.setDescription(mensaje)
         if(!((xp+xpDada) >= maxXP)) return msg.channel.send({ embeds: [embedMensaje] })
 
-        client.jugadores.get(String(userID)).incrementarNivel(1)
-        client.jugadores.get(String(userID)).xp = 0
-        client.jugadores.get(String(userID)).salud = 40+((nivel+1)*5)
+        client.jugadores.get(userID).incrementarNivel(1)
+        client.jugadores.get(userID).xp = 0
+        client.jugadores.get(userID).salud = 40+((nivel+1)*5)
         mensaje = mensaje+`\n**Has subido de nivel! **+5 MAX HP\n**Nivel actual**: ${nivel+1}\n`
         mensaje = mensaje+"Tu vida ha sido restaurada.\n"
         embedMensaje.setDescription(mensaje)

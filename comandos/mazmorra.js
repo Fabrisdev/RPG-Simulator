@@ -36,7 +36,7 @@ module.exports = {
                 return interaction.user.id == msg.author.id
             }
 
-            const collector = mensaje.createMessageComponentCollector({ filter, componentType: 'BUTTON', time: 15000 })
+            const collector = mensaje.createMessageComponentCollector({ filter, componentType: 'BUTTON', time: 30000 })
 
             collector.on("collect", i => {
                 if(i.customId === confirmarMazmorraRandom){

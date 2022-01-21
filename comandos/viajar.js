@@ -3,7 +3,7 @@ module.exports = {
     run: async (msg, args) => {
         const mundoSeleccionado = parseInt(args[0], 10)
         const userID = msg.author.id
-        const userSnap = client.jugadores.get(String(userID))
+        const userSnap = client.jugadores.get(userID)
         const mundoActual = userSnap.mundo
         if(!mundoSeleccionado) {
             msg.channel.send("Debes seleccionar un mundo a donde viajar.")
@@ -30,6 +30,6 @@ module.exports = {
         msg.channel.send("Aterrizando...")
         await utils.sleep(500)
         msg.channel.send(`¡Has llegado al mundo ${mundoSeleccionado}!`)
-        client.jugadores.get(String(userID)).mundo = mundoSeleccionado
+        client.jugadores.get(userID).mundo = mundoSeleccionado
     }
 }

@@ -47,6 +47,7 @@ module.exports = async (msg) => {
     // Ejecuta el comando enviando el client, el mensaje y los argumentos.
     try{
         await cmd.run(msg, args)
+        console.log(client.items)
     }catch(error){
         console.error(`[CMD] Ha ocurrido un error mientras ${msg.author.tag} ejecutaba el comando ${command}. Para más información leer debajo:`)
 		console.error(error)

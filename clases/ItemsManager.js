@@ -1,14 +1,12 @@
 const { Collection } = require('discord.js')
-const admin = require("firebase-admin")
-const db = admin.firestore()
 
 module.exports = class ItemsManager extends Collection{
     constructor(){
         super();
-        db.collection("items").get().then(itemsSnap => {
-            itemsSnap.forEach(doc => {
-                this.set(doc.id, doc.data())
-            })
-        })
+        this.set("1", { tipo: "Armas", nombre: "Espada de madera", precio: 500, emoji: '<:espadamadera:929207102109532211>', ataque: 2 })
+        this.set("2", { tipo: "Armas", nombre: "Hacha de madera", precio: 700, emoji: '<:hachamadera:929211502332882984>', ataque: 3 })
+        this.set("3", { tipo: "Consumibles", nombre: "Pan", precio: 100, emoji: '🍞', curacion: 20 })
+        this.set("4", { tipo: "Armaduras", nombre: "Casco de diamante", precio: 1500, emoji: '<:casco:930913840311459860>', defensa: 25 })
+        this.set("5", { tipo: "Mazmorras", nombre: "Llave de mazmorra", precio: 5000, emoji: '<:llave:931273942184894534>', utilidad: "Te permite entrar en una mazmorra" })
     }
 }

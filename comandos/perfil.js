@@ -4,7 +4,7 @@ module.exports = {
         let usuarioSeleccionado = msg.mentions.users.first()
         if(!usuarioSeleccionado) usuarioSeleccionado = msg.author
         const userID = usuarioSeleccionado.id
-        const userSnap = client.jugadores.get(String(userID))
+        const userSnap = client.jugadores.get(userID)
         if(!userSnap) return msg.channel.send("Esa persona no ha empezado a jugar aún!")
 
         const nivel = userSnap.nivel
