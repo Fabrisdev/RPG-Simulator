@@ -2,8 +2,17 @@ module.exports = async (msg) => {
     if(!msg.guild) return
     if(msg.author.bot) return
     const serverID = msg.guild.id
+    const canalID = msg.channel.id
+    const canalBot = client.servers.get(serverID).canalBot
     const prefix = client.servers.get(serverID).prefix
     if(msg.content.includes(`<@!${client.user.id}>`)) msg.channel.send(`La prefix actualmente es: ${prefix}`)
+    const args = msg.content.slice(prefix.length).trim().split(/ +/g)
+    const command = args.shift().toLowerCase()
+
+    if(command !== "config")
+        if(canalBot !== "all")
+            if(canalID !== canalBot) return
+
     const userID = msg.author.id
     const userSnap = client.jugadores.get(userID)
     if(!msg.content.toLowerCase().startsWith(prefix)) return
@@ -38,8 +47,6 @@ module.exports = async (msg) => {
 
     if(userSnap.enMazmorra === true) return
 
-    const args = msg.content.slice(prefix.length).trim().split(/ +/g)
-    const command = args.shift().toLowerCase()
     //Manejando eventos
     let cmd = client.comandos.get(command) || client.comandos.find(a => a.aliases && a.aliases.includes(command))
     if(!cmd) return
