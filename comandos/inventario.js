@@ -3,12 +3,11 @@ module.exports = {
     run: (msg, args) => {
         const userID = msg.author.id
         const userSnap = client.jugadores.get(userID)
-        const items = userSnap.items
         let fieldArmas = "" || "\u200B"
         let fieldArmaduras = "" || "\u200B"
         let fieldConsumiblesYMazmorras = "" || "\u200B"
 
-        Object.keys(items).forEach((key) => {
+        Object.keys(userSnap.items).forEach(key => {
             const itemSnap = client.items.get(key)
 
             if(itemSnap.tipo === "Armas"){
@@ -17,10 +16,17 @@ module.exports = {
             if(itemSnap.tipo === "Armaduras"){
                 fieldArmaduras+=`${key}. ${itemSnap.emoji} ${itemSnap.nombre}\n`
             }
-            if(itemSnap.tipo === "Consumibles" || itemSnap.tipo === "Mazmorras"){
+            if(itemSnap.tipo === "Mazmorras"){
                 fieldConsumiblesYMazmorras+=`${key}. ${itemSnap.emoji} ${itemSnap.nombre}\n`
             }
         })
+
+        Object.keys(userSnap.consumibles).forEach(key => {
+            const consumibleSnap = client.items.get(key)
+            const cantidadConsumible = userSnap.consumibles[key].cantidad
+            fieldConsumiblesYMazmorras+=`${key}. ${consumibleSnap.emoji} ${consumibleSnap.nombre} x${cantidadConsumible}\n`
+        })
+
 
         const embedInventario = new Discord.MessageEmbed()
             .setTitle("INVENTARIO")
