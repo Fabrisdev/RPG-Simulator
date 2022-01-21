@@ -46,7 +46,7 @@ for(const file of readdirSync("./comandos/")){
         //Agrega el nombre del comando a la colección client.commands con un 
         //valor de sus exportaciones respectivas.
         client.comandos.set(filename, fileContents)
-    }
+   }
 }
 
 //CONTROLADOR DE SLASH COMMANDS

@@ -16,17 +16,45 @@ module.exports = {
 
         //Revisar si tiene un amigo
         if(!amigo || amigo == msg.author){
+            const getRandomId = () => (Math.random() * 100).toString(36).replace('.','')
+            const confirmarMazmorraRandom = getRandomId()
+
             const botones = new MessageActionRow().addComponents(
                 new MessageButton()
-                    .setCustomId("confirmarMazmorra_confirmar")
+                    .setCustomId(confirmarMazmorraRandom)
                     .setLabel('CONFIRMAR')
                     .setStyle('SUCCESS'),
                 new MessageButton()
-                    .setCustomId("confirmarMazmorra_cancelar")
+                    .setCustomId("cancelar")
                     .setLabel('CANCELAR')
                     .setStyle('DANGER'),
             )
-            msg.reply({ content: "Puedes traer a un amigo para luchar juntos. ¿Estas seguro que deseas continuar solo?", components: [botones] })
+            client.jugadores.get(msg.author.id).enMazmorra = true
+            let mensaje = await msg.reply({ content: "Puedes traer a un amigo para luchar juntos. ¿Estas seguro que deseas continuar solo?", components: [botones] })
+            
+            const filter = interaction => {
+                return interaction.user.id == msg.author.id
+            }
+
+            const collector = mensaje.createMessageComponentCollector({ filter, componentType: 'BUTTON', time: 15000 })
+
+            collector.on("collect", i => {
+                if(i.customId === confirmarMazmorraRandom){
+                    mensaje.edit({ content: "Empezando mazmorra...", components: [] })
+                    const userSnap = client.jugadores.get(msg.author.id)
+                    const Mazmorra = require("../clases/Mazmorra.js")
+                    return Mazmorra.jugarMazmorra(userSnap.ultimoMundo, [msg.author], mensaje)
+                }
+                mensaje.edit({ content: "Mazmorra cancelada.", components: [] })
+                client.jugadores.get(msg.author.id).enMazmorra = false
+            })
+
+            collector.on("end", collected => {
+                if(collected.size === 0){
+                    client.jugadores.get(msg.author.id).enMazmorra = false
+                    mensaje.edit({ content: "Se te ha acabado el tiempo. Mazmorra cancelada.", components: [] })
+                }
+            })
             return
         }
 
