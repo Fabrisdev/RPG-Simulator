@@ -8,6 +8,7 @@ module.exports = async (msg) => {
     if(msg.content.includes(`<@!${client.user.id}>`)) msg.channel.send(`La prefix actualmente es: ${prefix}`)
     const args = msg.content.slice(prefix.length).trim().split(/ +/g)
     const command = args.shift().toLowerCase()
+    if(!msg.content.toLowerCase().startsWith(prefix)) return
 
     if(command !== "config")
         if(canalBot !== "all")
@@ -15,7 +16,6 @@ module.exports = async (msg) => {
 
     const userID = msg.author.id
     const userSnap = client.jugadores.get(userID)
-    if(!msg.content.toLowerCase().startsWith(prefix)) return
 
     //Preparar usuario para el juego
     if(!userSnap){ //El usuario nunca ha jugado
@@ -54,6 +54,7 @@ module.exports = async (msg) => {
     // Ejecuta el comando enviando el client, el mensaje y los argumentos.
     try{
         await cmd.run(msg, args)
+        console.log(client.jugadores.get(userID))
     }catch(error){
         console.error(`[CMD] Ha ocurrido un error mientras ${msg.author.tag} ejecutaba el comando ${command}. Para más información leer debajo:`)
 		console.error(error)

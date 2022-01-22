@@ -112,6 +112,12 @@ module.exports = class Player{
     }
 
     incrementarSalud(value){
+        const maxHP = 40 + this._nivel * 5
+        if(this._salud + value > maxHP){
+            this._salud = maxHP
+            db.collection("usuarios").doc(this._id).update({ salud: maxHP })
+            return
+        }
         this._salud = this._salud + value
         db.collection("usuarios").doc(this._id).update({ salud: FieldValue.increment(value) })
     }
@@ -142,6 +148,13 @@ module.exports = class Player{
             previaCantidad = this._consumibles[value].cantidad
         }catch(err){
             previaCantidad = 0
+        }
+        if(previaCantidad+cantidad <= 0){
+            delete this._consumibles[value]
+            db.collection("usuarios").doc(this._id).update({
+                [`consumibles.${value}`]: FieldValue.delete()
+            })
+            return
         }
         this._consumibles[value] = { cantidad: previaCantidad+cantidad }
         db.collection("usuarios").doc(this._id).update({
