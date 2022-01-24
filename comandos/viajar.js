@@ -20,7 +20,7 @@ module.exports = {
         }
         
         //Revisar si ya está en ese mundo
-        if(mundoSeleccionado == userSnap.ultimoMundo) return msg.channel.send("¡Ya estás ahí!")
+        if(mundoSeleccionado == userSnap.mundo) return msg.channel.send("¡Ya estás ahí!")
 
         //Viajar
         msg.channel.send(`VIAJANDO A MUNDO ${mundoSeleccionado}...`)

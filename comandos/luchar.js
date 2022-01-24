@@ -1,7 +1,7 @@
 const peleoRecientemente = new Set()
 
 module.exports = {
-    aliases: ["fight"],
+    aliases: ["fight", "atacar"],
     run: async (msg, args) => {
         const userID = msg.author.id
 

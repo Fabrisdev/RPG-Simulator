@@ -20,7 +20,7 @@ module.exports = {
                 embedAyuda.setDescription(`
                     **ID**: ${args[1]}
                     **Tipo**: ${itemSnap.tipo}
-                    **Emoji**: ${itemSnap.emoji}
+                    **Apariencia**: ${itemSnap.emoji}
                     **Uso**: Te entrega ${itemSnap.ataque} AT
                     `)
             }
@@ -29,7 +29,7 @@ module.exports = {
                 embedAyuda.setDescription(`
                     **ID**: ${args[1]}
                     **Tipo**: ${itemSnap.tipo}
-                    **Emoji**: ${itemSnap.emoji}
+                    **Apariencia**: ${itemSnap.emoji}
                     **Uso**: Te entrega ${itemSnap.defensa} DEF
                     `)
 
@@ -39,7 +39,7 @@ module.exports = {
                 embedAyuda.setDescription(`
                     **ID**: ${args[1]}
                     **Tipo**: ${itemSnap.tipo}
-                    **Emoji**: ${itemSnap.emoji}
+                    **Apariencia**: ${itemSnap.emoji}
                     **Uso**: Regenera ${itemSnap.curacion} HP
                     `)
             }
@@ -49,7 +49,7 @@ module.exports = {
                 embedAyuda.setDescription(`
                     **ID**: ${args[1]}
                     **Tipo**: ${itemSnap.tipo}
-                    **Emoji**: ${itemSnap.emoji}
+                    **Apariencia**: ${itemSnap.emoji}
                     **Uso**: ${itemSnap.utilidad}
                     `)
             }

@@ -13,6 +13,7 @@ module.exports = class Player{
     _ultimoMundo;
     _enMazmorra;
     _consumibles;
+    _equipo;
 
     constructor(id, data){
         this._id = id
@@ -24,8 +25,9 @@ module.exports = class Player{
         this._ultimoDaily = data.ultimoDaily
         this._mundo = data.mundo
         this._ultimoMundo = data.ultimoMundo
-        this._enMazmorra = data.enMazmorra || false
+        this._enMazmorra = false
         this._consumibles = data.consumibles
+        this._equipo = data.equipo
     }
 
     get id(){
@@ -72,6 +74,10 @@ module.exports = class Player{
         return this._consumibles
     }
 
+    get equipo(){
+        return this._equipo
+    }
+
     set dinero(value){
         this._dinero = value
         db.collection("usuarios").doc(this._id).update({ dinero: value })
@@ -104,6 +110,23 @@ module.exports = class Player{
 
     set enMazmorra(value){
         this._enMazmorra = value
+    }
+
+    set mundo(value){
+        this._mundo = value
+        db.collection("usuarios").doc(this._id).update({ mundo: value })
+    }
+
+    equiparItem(tipo, value){
+        this._equipo[tipo] = value
+        db.collection("usuarios").doc(this._id).update({
+            [`equipo.${tipo}`]: value
+        })
+    }
+
+    incrementarUltimoMundo(value){
+        this._ultimoMundo+=value
+        db.collection("usuarios").doc(this._id).update({ ultimoMundo: FieldValue.increment(value) })
     }
 
     incrementarDinero(value){
@@ -139,6 +162,13 @@ module.exports = class Player{
             {
                 encantamientos: []
             }
+        })
+    }
+
+    eliminarItem(value){
+        delete this._items[value]
+        db.collection("usuarios").doc(this._id).update({
+            [`items.${value}`]: FieldValue.delete()
         })
     }
 

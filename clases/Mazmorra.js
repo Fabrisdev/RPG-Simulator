@@ -1,11 +1,10 @@
 module.exports.jugarMazmorra = async (nivelMazmorra, users, msg) => {
-    switch(nivelMazmorra){
-        case 1:
-            let vidaDragon = 2500
-            msg.channel.send("¡Ha aparecido el dragón Minidann! VIDA: "+vidaDragon)
+    async function entrarMazmorra(vidaDragon, nombreDragon){
+            msg.channel.send(`¡Ha aparecido el dragón ${nombreDragon}! VIDA: ${vidaDragon}`)
             const usersCopia = [...users]
             for(let i = 0; i < users.length; i++){
                 client.jugadores.get(users[i].id).enMazmorra = true
+                client.jugadores.get(users[i].id).eliminarItem('5')
             }
 
             const { MessageActionRow, MessageButton } = require('discord.js')
@@ -21,7 +20,16 @@ module.exports.jugarMazmorra = async (nivelMazmorra, users, msg) => {
                     }
                     return
                 }
-                if(vidaDragon <= 0) return msg.channel.send("El dragón ha muerto!") 
+                if(vidaDragon <= 0){
+                    msg.channel.send("El dragón ha muerto!") 
+                    msg.channel.send(`¡TODOS LOS JUGADORES HAN DESBLOQUEADO EL MUNDO ${nivelMazmorra + 1}!`)
+                    msg.channel.send("**PUEDEN USAR `rpg viajar "+(nivelMazmorra + 1)+"` PARA IR ALLÍ**")
+                    for(let i = 0; i < usersCopia.length; i++){
+                        client.jugadores.get(usersCopia[i].id).enMazmorra = false
+                        client.jugadores.get(usersCopia[i].id).incrementarUltimoMundo(1)
+                    }
+                    return
+                }
                 if(done === false){
                     return setTimeout(esperarRepuesta, 250)
                 }
@@ -117,9 +125,18 @@ module.exports.jugarMazmorra = async (nivelMazmorra, users, msg) => {
                     })
                     await msg.channel.send({ content:`${users[i].username}: ¿Qué haras?`, components: [botones] })
             }
-        
+    }    
+
+    switch(nivelMazmorra){
+        case 1:
+            msg.react("<a:checkmark:930793535718961153>")
+            entrarMazmorra(2500, "Minidann")
             break
         default:
-            msg.channel.send("Ha ocurrido un grave error. Por contacta a mi creador Fabri D:")
+            msg.channel.send("¡Uy! Parece que aún no está lista esta mazmorra. Por favor, espere a que mi creador Fabri la termine :pleading_face:")
+            msg.react("<:nope:930794572198596619>")
+            for(let i = 0; i < users.length; i++){
+                client.jugadores.get(users[i].id).enMazmorra = false
+            }
     }
 }

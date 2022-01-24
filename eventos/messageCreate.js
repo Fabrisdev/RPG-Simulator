@@ -36,7 +36,8 @@ module.exports = async (msg) => {
             items: {},
             mundo: 1,
             ultimoMundo: 1,
-            consumibles: {}
+            consumibles: {},
+            equipo: {}
         }        
 
         client.jugadores.set(userID, new Player(userID, defaultItems))
@@ -54,7 +55,6 @@ module.exports = async (msg) => {
     // Ejecuta el comando enviando el client, el mensaje y los argumentos.
     try{
         await cmd.run(msg, args)
-        console.log(client.jugadores.get(userID))
     }catch(error){
         console.error(`[CMD] Ha ocurrido un error mientras ${msg.author.tag} ejecutaba el comando ${command}. Para más información leer debajo:`)
 		console.error(error)

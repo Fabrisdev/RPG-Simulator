@@ -7,11 +7,16 @@ module.exports = {
 
         //Revisar si tiene la llave
         if(!userSnap.items.hasOwnProperty('5')){
-            msg.channel.send("¿Crees que tienes lo necesario para luchar cotra el dragón de tu mundo?")
+            msg.channel.send("¿Crees que tienes lo necesario para luchar contra el dragón de tu mundo?")
             msg.channel.send("Equipate y vuelve aquí con una llave para abrir el portal.")
             return
         }
 
+        //Revisar si está en el mundo correcto para hacer mazmorra
+        if(userSnap.mundo !== userSnap.ultimoMundo){
+            return msg.channel.send("¡Uy! Parece que no te encuentras en el mundo en el que te corresponde luchar. Muevete a él usando `rpg viajar`")
+        }
+        
         const amigo = msg.mentions.users.first()
 
         //Revisar si tiene un amigo
@@ -69,10 +74,16 @@ module.exports = {
             return msg.channel.send("¡Uy! Parece que tu amigo no tiene una llave para abrir su portal. Dile que se compre una.")
         }
 
+        //Revisar si su amigo está en el mundo correcto para hacer mazmorra
+        if(amigoSnap.mundo !== amigoSnap.ultimoMundo){
+            return msg.channel.send("¡Uy! Parece que tu amigo no se encuentra en el mundo en el que le correspondería luchar. Dile que se mueva a él usando `rpg viajar`")
+        }
+
         //Revisar si están en el mismo mundo
         if(amigoSnap.ultimoMundo != userSnap.ultimoMundo){
-            msg.channel.send("¡Uy! Parece que tú amigo está en un mundo distinto al tuyo o ya lo ha superado.")
+            return msg.channel.send("¡Uy! Parece que tu amigo está en un mundo distinto al tuyo o ya lo ha superado.")
         }
+
         msg.channel.send("¿ESTÁN TODOS LOS JUGADORES LISTOS?")
         msg.channel.send("REACCIONEN A ESTE MENSAJE PARA CONFIRMAR")
         await msg.react("<a:checkmark:930793535718961153>")
