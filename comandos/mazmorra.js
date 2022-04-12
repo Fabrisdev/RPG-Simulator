@@ -47,8 +47,8 @@ module.exports = {
                 if(i.customId === confirmarMazmorraRandom){
                     mensaje.edit({ content: "Empezando mazmorra...", components: [] })
                     const userSnap = client.jugadores.get(msg.author.id)
-                    const Mazmorra = require("../clases/Mazmorra.js")
-                    return Mazmorra.jugarMazmorra(userSnap.ultimoMundo, [msg.author], mensaje)
+                    const Mazmorra = require("../clases/mazmorra/Mazmorra.js")
+                    return new Mazmorra(userSnap.ultimoMundo, [msg.author], mensaje)
                 }
                 mensaje.edit({ content: "Mazmorra cancelada.", components: [] })
                 client.jugadores.get(msg.author.id).enMazmorra = false
@@ -95,20 +95,19 @@ module.exports = {
         const collector = msg.createReactionCollector({ filter, time: 30000 })
         const usersReaccion = new Set()
 
-        collector.on('collect', (reaction, user) => {
-            console.log(user)
+         collector.on('collect', (reaction, user) => {
             usersReaccion.add(user)
-            if(usersReaccion.size == 2){
-                    msg.channel.send("Empezando mazmorra...")
-                    const Mazmorra = require("../clases/Mazmorra.js")
-                    Mazmorra.jugarMazmorra(userSnap.ultimoMundo, Array.from(usersReaccion), msg)
-                    collector.stop()
-            }
+            if(usersReaccion.size == 2) return collector.stop()
         })
 
-        collector.on('end', collected => {
-            if(usersReaccion.size != 2)
-                msg.channel.send("Ha pasado el limite de tiempo y ambos jugadores no han reaccionado. Mazmorra cancelada.")
+        collector.on('end', (collected, reason) => {
+            if(usersReaccion.size != 2) return msg.channel.send("Ha pasado el limite de tiempo y ambos jugadores no han reaccionado. Mazmorra cancelada.")
+            
+            msg.channel.send("Empezando mazmorra...")
+            const Mazmorra = require("../clases/mazmorra/Mazmorra.js")
+            const datosDragon = require("../clases/mazmorra/datosDragon.json")
+            if(!datosDragon[userSnap.ultimoMundo]) msg.channel.send("¡Uy! Parece que aún no está lista esta mazmorra. Por favor, espere a que mi creador Fabri la termine :pleading_face:").then(()=>msg.react("<:nope:930794572198596619>"))
+            else new Mazmorra(userSnap.ultimoMundo, Array.from(usersReaccion), msg)
         })
     }
 }

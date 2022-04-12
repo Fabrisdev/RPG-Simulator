@@ -11,7 +11,7 @@ module.exports.armas = async () => {
     let mensaje = ""
     itemsSnap.forEach((item, itemID) => {
         if(item.tipo != "Armas") return
-        mensaje += `${itemID}. ${item.emoji} Precio: ${item.precio} ${coin}: +${item.ataque} AT\n`
+        mensaje += `${itemID}. ${item.emoji} Precio: ${item.precio} ${coin}: x${item.multiplicadorAT} AT\n`
     })
     embedTienda.addField("ARMAS", mensaje)
     return embedTienda
@@ -28,7 +28,7 @@ module.exports.armaduras = async () => {
     let mensaje = ""
     itemsSnap.forEach((item, itemID) => {
         if(item.tipo != "Armaduras") return
-        mensaje = mensaje+`${itemID}. ${item.emoji} Precio: ${item.precio} ${coin}: +${item.defensa} DEF\n`
+        mensaje = mensaje+`${itemID}. ${item.emoji} Precio: ${item.precio} ${coin}: x${item.multiplicadorDEF} DEF\n`
     })
     embedTienda.addField("ARMADURAS", mensaje)
     return embedTienda

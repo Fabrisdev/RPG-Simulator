@@ -1,6 +1,6 @@
 module.exports = {
     name: 'tienda_',
-    regex: /tienda_(armas|armaduras|consumibles|mazmorras)$/gi,
+    regex: /^tienda_(armas|armaduras|consumibles|mazmorras)$/i,
     run: async (interaction) => {
         await interaction.deferUpdate()
         const msgreply = await interaction.channel.messages.fetch(interaction.message.reference.messageId)

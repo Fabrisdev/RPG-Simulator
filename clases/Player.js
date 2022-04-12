@@ -14,6 +14,7 @@ module.exports = class Player{
     _enMazmorra;
     _consumibles;
     _equipo;
+    _mana;
 
     constructor(id, data){
         this._id = id
@@ -28,6 +29,11 @@ module.exports = class Player{
         this._enMazmorra = false
         this._consumibles = data.consumibles
         this._equipo = data.equipo
+        this._mana = 0
+    }
+
+    get mana(){
+        return this._mana
     }
 
     get id(){
@@ -76,6 +82,10 @@ module.exports = class Player{
 
     get equipo(){
         return this._equipo
+    }
+
+    set mana(value){
+        this._mana = value
     }
 
     set dinero(value){
@@ -141,6 +151,11 @@ module.exports = class Player{
             db.collection("usuarios").doc(this._id).update({ salud: maxHP })
             return
         }
+        if(this._salud + value <= 0){
+            this._salud = 0
+            db.collection("usuarios").doc(this._id).update({ salud: maxHP })
+            return
+        }
         this._salud = this._salud + value
         db.collection("usuarios").doc(this._id).update({ salud: FieldValue.increment(value) })
     }
@@ -173,12 +188,7 @@ module.exports = class Player{
     }
 
     incrementarConsumibles(value, cantidad){
-        let previaCantidad = undefined
-        try{
-            previaCantidad = this._consumibles[value].cantidad
-        }catch(err){
-            previaCantidad = 0
-        }
+        const previaCantidad = this._consumibles[value]?.cantidad ?? 0
         if(previaCantidad+cantidad <= 0){
             delete this._consumibles[value]
             db.collection("usuarios").doc(this._id).update({
@@ -193,5 +203,25 @@ module.exports = class Player{
                 cantidad: previaCantidad+cantidad
             }
         })
+    }
+
+    atacar(){
+        const armaEquipada = this._equipo["Arma"]
+        if(!armaEquipada) return Math.floor(utils.generarNumeroRandom(25,50))
+        
+        const itemSnap = client.items.get(armaEquipada)
+        return Math.floor(utils.generarNumeroRandom(25,50) * itemSnap.multiplicadorAT)
+    }
+
+    defenderse(ataque){
+        const armaduraEquipada = this._equipo["Armadura"]
+        if(!armaduraEquipada) return ataque
+
+        const itemSnap = client.items.get(armaduraEquipada)
+        return (ataque * (100 - itemSnap.defensaPorcentaje)) / 100
+    }
+
+    incrementarMana(value){
+        this._mana += value
     }
 }

@@ -1,23 +1,27 @@
 module.exports = {
     aliases: ["i", "inventory"],
     run: (msg, args) => {
-        const userID = msg.author.id
+        const userMencionado = msg.mentions.users.first() ?? msg.author
+        const userID = userMencionado.id
         const userSnap = client.jugadores.get(userID)
-        let fieldArmas = "" || "\u200B"
-        let fieldArmaduras = "" || "\u200B"
-        let fieldConsumiblesYMazmorras = "" || "\u200B"
+        if(!userSnap) return msg.channel.send("Esa persona no ha empezado a jugar aún!")
+        let fieldArmas = "\u200B"
+        let fieldArmaduras = "\u200B"
+        let fieldConsumiblesYMazmorras = "\u200B"
 
         Object.keys(userSnap.items).forEach(key => {
             const itemSnap = client.items.get(key)
 
-            if(itemSnap.tipo === "Armas"){
-                fieldArmas+=`${key}. ${itemSnap.emoji} ${itemSnap.nombre}\n`
-            }
-            if(itemSnap.tipo === "Armaduras"){
-                fieldArmaduras+=`${key}. ${itemSnap.emoji} ${itemSnap.nombre}\n`
-            }
-            if(itemSnap.tipo === "Mazmorras"){
-                fieldConsumiblesYMazmorras+=`${key}. ${itemSnap.emoji} ${itemSnap.nombre}\n`
+            switch(itemSnap.tipo){
+                case "Armas":
+                    fieldArmas+=`${key}. ${itemSnap.emoji} ${itemSnap.nombre}\n`
+                    break
+                case "Armaduras":
+                    fieldArmaduras+=`${key}. ${itemSnap.emoji} ${itemSnap.nombre}\n`
+                    break
+                case "Mazmorras":
+                    fieldConsumiblesYMazmorras+=`${key}. ${itemSnap.emoji} ${itemSnap.nombre}\n`
+                    break
             }
         })
 
@@ -32,7 +36,7 @@ module.exports = {
             .setTitle("INVENTARIO")
             .setColor(0x00AE86)
             .setTimestamp()
-            .setFooter(`Inventario de ${msg.author.username}`, client.user.avatarURL())
+            .setFooter(`Inventario de ${userMencionado.username}`, client.user.avatarURL())
             .addField("ARMAS", fieldArmas, true)
             .addField("ARMADURAS", fieldArmaduras, true)
             .addField("CONSUMIBLES Y MAZMORRAS", fieldConsumiblesYMazmorras, true)

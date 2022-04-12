@@ -46,7 +46,7 @@ module.exports = async (msg) => {
         return db.collection("usuarios").doc(userID).set({ ...defaultItems })
     }
 
-    if(userSnap.enMazmorra === true) return
+    if(userSnap.enMazmorra) return
 
     //Manejando eventos
     let cmd = client.comandos.get(command) || client.comandos.find(a => a.aliases && a.aliases.includes(command))

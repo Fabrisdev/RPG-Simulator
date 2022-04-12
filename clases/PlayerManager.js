@@ -1,9 +1,8 @@
-const { Collection } = require('discord.js')
 const Player = require("./Player.js")
 const admin = require("firebase-admin")
 const db = admin.firestore()
 
-module.exports = class ItemsManager extends Collection{
+module.exports = class ItemsManager extends Discord.Collection{
     constructor(){
         super();
         db.collection("usuarios").get().then(usersSnap => {

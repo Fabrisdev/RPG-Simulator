@@ -1,7 +1,5 @@
 module.exports = async (interaction) => {
-	if(interaction.isButton()){
-		client.botones.find(boton => boton.regex.test(interaction.customId))?.run(interaction)
-	}
+	if(interaction.isButton()) client.botones.find(btn => btn.regex.test(interaction.customId))?.run(interaction)
 
     if (interaction.isCommand()) {
 		const command = client.slashComandos.get(interaction.commandName)
@@ -14,6 +12,4 @@ module.exports = async (interaction) => {
 			return interaction.reply({ content: 'Hubo un error mientras se ejecutaba el comando. Por favor, contacta con Fabri (Fabri#6560).', ephemeral: true })
 		}
 	}
-
-	
 }

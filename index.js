@@ -26,7 +26,8 @@ client = new Discord.Client({
     } 
   })
 
-client.servers = new Discord.Collection()
+  client.servers = new Discord.Collection()
+  client.mazmorras = new Discord.Collection()
 
 let { readdirSync } = require("fs")
 client.comandos = new Discord.Collection()
