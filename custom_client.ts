@@ -1,5 +1,11 @@
-import { Client, Collection } from 'discord.js'
+import { Client, Collection, CommandInteraction, SlashCommandBuilder } from 'discord.js'
+
+export type Command = {
+    data: SlashCommandBuilder,
+    execute: (interaction: CommandInteraction) => Promise<void>,
+}
 
 export default interface CustomClient extends Client{
-    commands?: Collection<unknown, unknown>
+    commands?: Collection<string, Command>
 }
+

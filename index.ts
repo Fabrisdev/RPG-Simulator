@@ -1,11 +1,11 @@
-import { Client, Collection, Events, GatewayIntentBits, SlashCommandBuilder } from 'discord.js'
+import { Client, Collection, Events, GatewayIntentBits } from 'discord.js'
 import dotenv from 'dotenv'
 dotenv.config()
 const { DISCORD_TOKEN } = process.env
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import CustomClient from './custom_client'
+import CustomClient, { Command } from './custom_client'
 import { log_error } from './utils/log.js'
 
 const client: CustomClient = new Client({
@@ -23,10 +23,6 @@ const commands_path = path.join(__dirname, 'commands')
 const command_files = fs.readdirSync(commands_path).filter(file => file.endsWith('.command.ts'))
 
 command_files.map(async file => {
-    type Command = {
-        data?: SlashCommandBuilder,
-        execute?: () => Promise<void>,
-    }
     const file_path = path.join(commands_path, file)
     const command_module = await import(file_path)
     const command: Command = command_module.default
@@ -45,8 +41,11 @@ client.once(Events.ClientReady, bot => {
     console.log(`[${date_formatted}] ¡${bot.user.username} está de vuelta en la fiesta!`)
 })
 
-client.on(Events.InteractionCreate, interaction => {
-    console.log(interaction)
+client.on(Events.InteractionCreate, async interaction => {
+    if(!interaction.isChatInputCommand()) return
+    const command = client.commands?.get(interaction.commandName)
+    if(!command) return
+    await command.execute(interaction)
 })
 
 client.login(DISCORD_TOKEN)

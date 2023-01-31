@@ -6,6 +6,6 @@ export default {
         .setDescription('🏓'),
     
     async execute(interaction: CommandInteraction){
-        await interaction.reply('asd')
+        await interaction.reply('Sexo?')
     },
 }
