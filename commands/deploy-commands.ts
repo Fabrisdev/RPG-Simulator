@@ -45,7 +45,7 @@ async function deploy(){
             { body: commandsData },
         )
         //@ts-expect-error rest is shit and cant do actual good type definitions
-        console.log(`Successfully reloaded ${(data.length)} application (/) commands.`)
+        console.log(`Successfully reloaded ${data.length} application (/) commands.`)
 
     } catch (error) {
         // And of course, make sure you catch and log any errors!
