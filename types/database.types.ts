@@ -15,18 +15,44 @@ export interface Database {
           id: string
           items: Json
           level: number
+          money: number
+          world: number
+          xp: number
         }
         Insert: {
           health?: number
           id: string
           items?: Json
           level?: number
+          money?: number
+          world?: number
+          xp?: number
         }
         Update: {
           health?: number
           id?: string
           items?: Json
           level?: number
+          money?: number
+          world?: number
+          xp?: number
+        }
+      }
+      servers: {
+        Row: {
+          all_channels_allowed: boolean
+          allowed_channel: string | null
+          id: string
+        }
+        Insert: {
+          all_channels_allowed?: boolean
+          allowed_channel?: string | null
+          id: string
+        }
+        Update: {
+          all_channels_allowed?: boolean
+          allowed_channel?: string | null
+          id?: string
         }
       }
     }

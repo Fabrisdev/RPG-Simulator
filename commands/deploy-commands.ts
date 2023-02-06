@@ -3,8 +3,8 @@ import dotenv from 'dotenv'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { Command } from '../custom_client.js'
-import { log_error } from '../utils/log.js'
+import { Command } from '../types/custom_client.js'
+import { log_error } from '../utils/logger.js'
 
 dotenv.config()
 

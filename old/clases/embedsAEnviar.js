@@ -1,3 +1,4 @@
+
 const coin = "<:coin:929204039697195018>"
 
 module.exports.armas = async () => {

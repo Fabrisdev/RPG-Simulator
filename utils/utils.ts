@@ -1,18 +1,21 @@
-export async function sleep(ms: number){
-    await new Promise(resolve => {
+export async function sleep(ms: number) {
+    await new Promise((resolve) => {
         setTimeout(resolve, ms)
     })
 }
 
-export class StringBuilder{
+export class StringBuilder {
     private content = ''
 
-    addLine(lineContent: string){
+    addLine(lineContent: string) {
         this.content += '\n' + lineContent
         return this
     }
 
-    toString(){
+    toString() {
         return this.content
     }
 }
+
+
+

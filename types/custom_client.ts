@@ -1,5 +1,6 @@
 import { Client, Collection, CommandInteraction, SlashCommandBuilder } from 'discord.js'
-import { Player } from '../PlayersManager.js'
+import { PlayersManager } from '../managers/PlayersManager.js'
+import { ServersManager } from '../managers/ServersManager.js'
 
 export type Command = {
     data: SlashCommandBuilder,
@@ -9,15 +10,11 @@ export type Command = {
 export type Event = {
     name: string,
     once?: boolean,
-    execute: (...args: any[]) => Promise<void>,
+    execute: (...args: unknown[]) => Promise<void>,
 }
 
-export interface CustomClient extends Client{
+export interface CustomClient<T extends boolean> extends Client<T>{
     commands?: Collection<string, Command>,
-    players?: Collection<string, Player>
-}
-
-export interface CustomClientTrue extends Client<true>{
-    commands?: Collection<string, Command>,
-    players?: Collection<string, Player>
+    players?: PlayersManager,
+    servers?: ServersManager
 }

@@ -1,16 +1,16 @@
 import { Client, Collection, GatewayIntentBits } from 'discord.js'
 import dotenv from 'dotenv'
 dotenv.config()
-const { DISCORD_TOKEN, SUPABASE_URL, SUPABASE_SERVICE_ROLE } = process.env
+const { DISCORD_TOKEN } = process.env
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { CustomClient, Command, Event } from './types/custom_client'
-import { log_error } from './utils/log.js'
-import { createClient } from '@supabase/supabase-js'
-import { Database } from './types/database.types'
+import { log_error } from './utils/logger.js'
+import { PlayersManager } from './managers/PlayersManager.js'
+import { ServersManager } from './managers/ServersManager.js'
 
-const client: CustomClient = new Client({
+const client: CustomClient<boolean> = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
@@ -24,6 +24,8 @@ const client: CustomClient = new Client({
 })
 
 client.commands = new Collection()
+client.players = new PlayersManager()
+client.servers = new ServersManager()
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
