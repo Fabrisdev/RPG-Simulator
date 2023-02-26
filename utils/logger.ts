@@ -8,4 +8,5 @@ export function log_error(error_message: string){
     console.error('')
     console.error(colors.bold(colors.red('                              ❌ HA OCURRIDO UN ERROR ❌')))
     console.error(colors.bold(colors.gray('--------------------------------------------------------------------------------------')))
+    return 'Ocurrió un error'
 }

@@ -32,8 +32,15 @@ export default {
         }
         const client: CustomClient<true> = interaction.client
         const command = client.commands?.get(interaction.commandName)
-        if(!command) return log_error(`Uh oh. Parece que no hay un comando para poder ejecutar el slash command: ${interaction.commandName}`)
-        await command.execute(interaction)
+        if(command) return await command.execute(interaction)
+        const super_command = client.super_commands?.get(interaction.commandName)
+        if(!super_command) return log_error(`Uh oh. Parece que no hay un comando para poder ejecutar el slash command: ${interaction.commandName}`)
+        for(const [ option_name, executor ] of super_command){
+            if(interaction.options.get(option_name)) return executor(interaction)
+        }
+        const default_executor = super_command.get('DEFAULT')
+        if(!default_executor) return log_error(`Parece que se ha usado alguna opción (o ningúna) en el slash command: ${interaction.commandName} sin embargo no había función para ejecutarla ni función por defecto.`)
+        default_executor(interaction)
     }
 }
 

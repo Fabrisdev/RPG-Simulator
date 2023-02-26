@@ -2,10 +2,10 @@ import { Client, Collection, GatewayIntentBits } from 'discord.js'
 import dotenv from 'dotenv'
 dotenv.config()
 const { DISCORD_TOKEN } = process.env
-import fs from 'fs'
+import fs, { readdirSync } from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { CustomClient, Command, Event } from './types/custom_client'
+import { CustomClient, Command, Event, Executor } from './types/custom_client'
 import { log_error } from './utils/logger.js'
 import { PlayersManager } from './managers/PlayersManager.js'
 import { ServersManager } from './managers/ServersManager.js'
@@ -24,6 +24,7 @@ const client: CustomClient<boolean> = new Client({
 })
 
 client.commands = new Collection()
+client.super_commands = new Collection()
 client.players = new PlayersManager()
 client.servers = new ServersManager()
 
@@ -38,9 +39,38 @@ command_file_names.map(async file_name => {
     const command: Command = command_module.default
     const { data, execute } = command
     if(!data || !execute)
-        return log_error(`¡Uy! Parece que le estan faltando unos parámetros al comando ${file_name}`)
+        throw log_error(`¡Uy! Parece que le estan faltando unos parámetros al comando ${file_name}`)
 
     client.commands?.set(data.name, command)
+})
+
+//super commands
+const file_names = readdirSync(commands_path, { withFileTypes: true })
+    .filter(file => file.isDirectory())
+    .map(file => file.name)
+
+//setup super options
+file_names.map(async file_name => {
+    const files_path = path.join(commands_path, file_name)
+    const option_names_with_extension = readdirSync(files_path)
+        .filter(file_name => file_name.endsWith('.option.ts'))
+    
+    const options = new Collection<string, Executor>
+    await Promise.all(
+        option_names_with_extension.map(async option_name_with_extension => {
+            const option_executor = await import(path.join(files_path, option_name_with_extension))
+            const executor = option_executor.default
+            const option_name = option_name_with_extension.split('.')[0]
+            console.log(option_name)
+            console.log(executor)
+            options.set(option_name, executor)
+        })
+    )
+    const default_import = await import(path.join(files_path, 'default.ts'))
+    const default_executor = default_import.default
+
+    options.set('DEFAULT', default_executor)
+    client.super_commands?.set(file_name, options)
 })
 
 const events_path = path.join(__dirname, 'events')

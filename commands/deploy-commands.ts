@@ -1,6 +1,6 @@
-import { REST, RESTPostAPIChatInputApplicationCommandsJSONBody, Routes } from 'discord.js'
+import { REST, RESTPostAPIChatInputApplicationCommandsJSONBody, Routes, SlashCommandBuilder } from 'discord.js'
 import dotenv from 'dotenv'
-import fs from 'fs'
+import fs, { readdirSync } from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { Command } from '../types/custom_client.js'
@@ -22,13 +22,27 @@ async function deploy(){
     // Grab all the command files from the commands directory you created earlier
     const __filename = fileURLToPath(import.meta.url)
     const __dirname = path.dirname(__filename)
-    const command_file_names = fs.readdirSync(__dirname).filter(file => file.endsWith('.command.ts'))
+    const basic_command_file_names = fs.readdirSync(__dirname).filter(file => file.endsWith('.command.ts'))
     
     // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
-    await Promise.all(command_file_names.map(async command_file_name => {
+    await Promise.all(basic_command_file_names.map(async command_file_name => {
         const commandModule = await import(path.join(__dirname, command_file_name))
         const command: Command = commandModule.default
         commandsData.push(command.data.toJSON())
+    }))
+
+    //special folder commands
+    const file_names = readdirSync(__dirname, { withFileTypes: true })
+        .filter(file => file.isDirectory())
+        .map(file => file.name)
+        
+    await Promise.all(file_names.map(async file_name => {
+        const files_path = path.join(__dirname, file_name)
+        const files = readdirSync(files_path)
+        if(!files.includes('builder.ts')) throw log_error(`:/ El comando ${file_name} no contiene un builder`)
+        const builder = await import(path.join(files_path, 'builder.ts'))
+        const data = builder.default as SlashCommandBuilder
+        commandsData.push(data.toJSON())
     }))
     
     // Construct and prepare an instance of the REST module
