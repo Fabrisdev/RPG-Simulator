@@ -61,17 +61,20 @@ file_names.map(async file_name => {
             const option_executor = await import(path.join(files_path, option_name_with_extension))
             const executor = option_executor.default
             const option_name = option_name_with_extension.split('.')[0]
-            console.log(option_name)
-            console.log(executor)
             options.set(option_name, executor)
         })
     )
-    const default_import = await import(path.join(files_path, 'default.ts'))
-    const default_executor = default_import.default
-
-    options.set('DEFAULT', default_executor)
+    await set_default_super_option(files_path, options)
     client.super_commands?.set(file_name, options)
 })
+
+async function set_default_super_option(files_path: string, options: Collection<string, Executor>){
+    const does_default_exist = readdirSync(files_path).includes('default.ts')
+    if(!does_default_exist) return
+    const default_import = await import(path.join(files_path, 'default.ts'))
+    const default_executor = default_import.default
+    options.set('DEFAULT', default_executor)
+}
 
 const events_path = path.join(__dirname, 'events')
 const event_file_names = fs.readdirSync(events_path).filter(file => file.endsWith('.event.ts'))

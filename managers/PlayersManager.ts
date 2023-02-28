@@ -34,7 +34,7 @@ export class Player {
         this.xp = data.xp
     }
 
-    get_hd() {
+    get_id() {
         return this.id
     }
 
@@ -66,6 +66,10 @@ export class Player {
         return world_names[this.world] ?? 'Desconocido'
     }
 
+    get_raw_world(){
+        return this.world
+    }
+
     get_xp() {
         return this.xp
     }
@@ -76,6 +80,17 @@ export class Player {
 
     get_money() {
         return this.money
+    }
+
+    set_level(level: number){
+        this.level = level
+        const supabase = setup_supabase()
+        supabase
+            .from('players')
+            .update({
+                level,
+            })
+            .eq('id', this.id)
     }
 }
 

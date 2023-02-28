@@ -16,7 +16,7 @@ async function add_player(interaction: CommandInteraction) {
         .single()
     if(error){
         log_error(`Ocurrió un error al intentar añadir la tabla del jugador ${id}.`)
-        return console.log(error)
+        throw error
     }
     const client: CustomClient<true> = interaction.client
     client.players?.set(id, new Player(data))
@@ -60,8 +60,7 @@ export function setup_player(interaction: CommandInteraction) {
             }
         )
     interaction.reply({
-        content:
-            '¡Hey! Parece que eres nuevo aquí. Deja que te explique como funcionan las cosas por aquí...',
+        content: '¡Hey! Parece que eres nuevo aquí. Deja que te explique como funcionan las cosas por aquí...',
         embeds: [ embed ],
     })
 }

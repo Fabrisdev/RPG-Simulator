@@ -30,21 +30,20 @@ async function deploy(){
         const command: Command = commandModule.default
         commandsData.push(command.data.toJSON())
     }))
-
     //special folder commands
     const file_names = readdirSync(__dirname, { withFileTypes: true })
         .filter(file => file.isDirectory())
         .map(file => file.name)
-        
+    
     await Promise.all(file_names.map(async file_name => {
         const files_path = path.join(__dirname, file_name)
         const files = readdirSync(files_path)
+        console.log(files)
         if(!files.includes('builder.ts')) throw log_error(`:/ El comando ${file_name} no contiene un builder`)
         const builder = await import(path.join(files_path, 'builder.ts'))
         const data = builder.default as SlashCommandBuilder
         commandsData.push(data.toJSON())
     }))
-    
     // Construct and prepare an instance of the REST module
     const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN)
     
